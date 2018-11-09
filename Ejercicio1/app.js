@@ -17,8 +17,7 @@ fs.appendFile('./Examen1.txt', 'Primer Examen Desarrollo de Applicaciones de Van
   if (error)
     console.log(error);
   else
-    console.log('El texto fue creado');
+    console.log('creado');
 });
 
 console.log(p1,p2,p3);
-console.log('última línea del programa');
