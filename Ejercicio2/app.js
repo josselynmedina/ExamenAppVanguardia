@@ -5,6 +5,13 @@ var path= require("path");
 var app = express();
 
 
+app.set("view engine", "pug");
+app.set("views", path.join(__dirname, "views"));
+
+app.get('/', function (req, res) {
+    res.render("index", { nombre: 'Josselyn Medina'});
+});
+
 app.listen(3000, function () {
   console.log('Conectado al puerto 3000!');
 });
@@ -16,15 +23,15 @@ mongoose.connect('mongodb://admin:admin123@ds121192.mlab.com:21192/dbbodega',  {
 
 //Esquema
 var bodegaSchema = mongoose.Schema({
-    _id: Number,
+    sku: Number,
     descripcion: String,
     marca: String,
-    numero_estante: String
-},{collection:dbbodega});
+    nestante: String
+},{collection:'Productos'});
 
 //agregado metodos al esquema
 bodegaSchema.methods.info = function () {
-    var msj = "Hola, soy " + this.descripcion + " y estoy en el estante" + this.numero_estante;
+    var msj = "Hola, soy " + this.descripcion + " y estoy en el estante" + this.nestante;
     console.log(msj);
 };
 
@@ -42,8 +49,8 @@ app.get('/api/productos', function (req, res) {
 });
 
 ///Get de los productos por ID
-app.get('/api/productos/:id',function(req,res){
-    Productos.findById(req.params.id,function(err, productos) {
+app.get('/api/productos/{sku}',function(req,res){
+    Productos.findById(req.params.sku,function(err, productos) {
         if (err)
             res.status(500).send('Error en la base de datos');
         else{
@@ -60,10 +67,10 @@ app.get('/api/productos/:id',function(req,res){
 //agrega un nuevo producto
 app.post('/api/productos',function(req,res){
     var productos1 = new Productos({
-        _id: req.body.id,
+        sku: req.body.sku,
         descripcion: req.body.descripcion,
         marca: req.body.marca,
-        numero_estante: req.body.numero_estante
+        nestante: req.body.nestante
     });
  
     //guarda una producto en la base de datos
@@ -80,7 +87,7 @@ app.post('/api/productos',function(req,res){
 
 
 //por marca
-app.get('/api/productos', function(req, res){
+app.get('/api/productos?marca={marca}', function(req, res){
     Productos.find({marca: req.query.marca},function (err, productos) {
         if (err) {
             console.log(err);
